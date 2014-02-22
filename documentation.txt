@@ -1,0 +1,35 @@
+///—— Description of functions ——///
+
+charToInt : A function which takes ‘0’,’1’,…,’9’ and returns 0,1,…,9 respectively.
+
+intToChar : A function which takes 0,1,…,9 and returns ‘0’,’1’,…,’9’
+
+stringToInt : A function which converts and int to string
+
+Substring : A function which returns a substring of s of length “length” starting from 	start
+
+node : a structure used in linked list implementation of stack
+
+Stack : class used to represent stack
+
+judge : a function used to check whether a given input sequence should be accepted or rejected
+
+printReverse : a function to print in reverse order the rules used in an accepted input sequence
+
+main : takes input and calls the functions judge and printReverse to do tasks
+	rules stored in a 2 dimensional array of strings. rules is a pointer to 
+	pointer-to-string and it points to first element of a pointer-to-string array.
+	dummyRules2 stores rules as given for use by printReverse.
+	symbols are stored in an array of string. symbols is a pointer-to-string.
+	using symbols dummyrules are converted to rules.
+	lookup table is stored as a 2 dimensional array. lookuptable is a ponter to
+	pointer-to-string.
+	all memory is freed using delete in the end.
+
+///—— Time Complexity of functions ——///
+
+- Reading input takes time proportional to the size of the input
+
+- judge takes time proportional to the size of inputsequence
+
+- printreverse takes time proportional to the number of rules applied
