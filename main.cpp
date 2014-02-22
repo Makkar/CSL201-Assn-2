@@ -125,15 +125,11 @@ void Stack::Pop()
 bool judge(string * inputSequence, Stack & stac, Stack & rulesApplied, int numberOfRules, string ** rules, string * dummyRules2, int numberOfFinalSymbols, int numberOfNonFinalSymbols, string * symbols, int rowsOfLookupTable, int columnsOfLookupTable, string ** lookupTable)
 {
     int lengthOf_inputSequence = stringToInt(inputSequence[0]);
-    //cout<<"Entered judge"<<endl;
-    //cout<<"lengthOf_inputSequence is -"<<lengthOf_inputSequence<<"-"<<endl;
     int I = 1;
     bool verdict = false;
     while(I<lengthOf_inputSequence+1)
     {
-        //cout<<"Entered while"<<endl;
         int currentState = stac.TopState();
-        //cout<<"current state is -"<<currentState<<"-"<<endl;
         int J = 0;
         bool semiVerdict = false;
         for(; J<numberOfFinalSymbols+numberOfNonFinalSymbols; ++J)
@@ -141,36 +137,28 @@ bool judge(string * inputSequence, Stack & stac, Stack & rulesApplied, int numbe
             if(symbols[J]==inputSequence[I])
             {
                 semiVerdict = true;
-                //cout<<"J which breaks it is "<<J<<endl;
                 break;
             }
         }
         if(!semiVerdict) return false;
         string whatToDo = lookupTable[currentState][J];
-        //cout<<"whatToDo is -"<<whatToDo<<"-"<<endl;
         if(whatToDo=="-") return false;
         if(whatToDo=="acc") return true;
         if(whatToDo[0]=='p')
         {
-            //cout<<"Entered p"<<endl;
             int whatToDo_number = stringToInt(Substring(whatToDo, 1, whatToDo.size()-1));
-            //cout<<"whatToDo_number is -"<<whatToDo_number<<"-"<<endl;
             stac.Push(inputSequence[I], whatToDo_number);
             ++I;
         }
         else
         {
-            //cout<<"else"<<endl;
             int whatToDo_number = stringToInt(Substring(whatToDo, 1, whatToDo.size()-1));
-            //cout<<"whatToDo_number is -"<<whatToDo_number<<"-"<<endl;
             int lengthOfTail = stringToInt((rules[whatToDo_number-1][0])) - 2;
-            //cout<<"lenghtOftail is "<<lengthOfTail<<endl;
             for(int i = lengthOfTail+2; i>2; --i)
             {
                 if(rules[whatToDo_number-1][i]==stac.TopData())
                 {
                     stac.Pop();
-                    //cout<<"popped for "<<rules[whatToDo_number-1][i]<<endl;
                 }
                 else
                 {
@@ -178,7 +166,6 @@ bool judge(string * inputSequence, Stack & stac, Stack & rulesApplied, int numbe
                 }
             }
             rulesApplied.Push(dummyRules2[whatToDo_number-1], 0);
-            //cout<<"pushed "<<dummyRules2[whatToDo_number-1]<<" in rulesApplied"<<endl;
             int j = 0;
             for(; j<numberOfNonFinalSymbols+numberOfFinalSymbols; ++j)
             {
@@ -186,7 +173,6 @@ bool judge(string * inputSequence, Stack & stac, Stack & rulesApplied, int numbe
                 {
                     if(lookupTable[stac.TopState()][j]=="-") return false;
                     stac.Push(symbols[j], stringToInt(lookupTable[stac.TopState()][j]));
-                    //cout<<"j which causes push is "<<j<<endl;
                 }
             }
         }
@@ -206,12 +192,9 @@ void printReverse(Stack & rulesApplied)
 
 int main()
 {
-    //Taking Preliminary Input
     int numberOfRules; cin>>numberOfRules;
-    //cout<<"numberOfRules is -"<<numberOfRules<<"-"<<endl;
     string dummy;
     getline(cin,dummy);
-    //cout<<"dummy is -"<<dummy<<"-"<<endl;
     
     string ** rules = new string*[numberOfRules]; // rules is a pointer to pointer-to-string and it points to first element of a pointer-to-string array
     
@@ -220,9 +203,7 @@ int main()
     string *dummyRules2 = new string[numberOfRules];
     for(int i=0; i<numberOfRules; ++i)
     {
-        //cout<<"Entered for loop"<<endl;
         getline(cin,dummy);
-        //cout<<"dummy is -"<<dummy<<"-"<<endl;
         dummyRules2[i] = dummy;
         string rule_i = "";
         for(int j=0; j<dummy.size(); ++j)
@@ -231,19 +212,16 @@ int main()
             rule_i += dummy[j];
         }
         dummyRules[i] = rule_i;
-        //cout<<"dummyRules[i] is -"<<dummyRules[i]<<"-"<<endl;
     }
     
     //taking symbols (final and non-final)
     int numberOfFinalSymbols, numberOfNonFinalSymbols;
     cin>>numberOfFinalSymbols;
     cin>>numberOfNonFinalSymbols;
-    //cout<<"number of final & non-final symbols are -"<<numberOfFinalSymbols<<"-"<<numberOfNonFinalSymbols<<"-"<<endl;
     string *symbols = new string[numberOfNonFinalSymbols + numberOfFinalSymbols];
     for(int i=0; i<numberOfFinalSymbols+numberOfNonFinalSymbols; ++i)
     {
         cin>>symbols[i];
-        //cout<<"symbols[i] is -"<<symbols[i]<<"-"<<endl;
     }
     
     //converting dummyRules to rules using symbols
@@ -255,23 +233,19 @@ int main()
         int k = 1;
         while(j<lengthOfRule_i)
         {
-            //cout<<"Entered outer while with j = "<<j<<endl;
             if(dummyRules[i][j]=='!')
             {
                 rules[i][k]="!";
                 ++j;
                 ++k;
-                //cout<<"! encountered"<<endl;
             }
             else
             {
-                //cout<<"else entered"<<endl;
                 string candidate;
                 int len = 1;
                 while(true)
                 {
                     candidate = Substring(dummyRules[i], j, len);
-                    //cout<<"a candidate is "<<candidate<<endl;
                     bool isThere = false;
                     for(int I = 0; I<numberOfFinalSymbols+numberOfNonFinalSymbols; ++I)
                     {
@@ -287,7 +261,6 @@ int main()
                     }
                     ++len;
                 }
-                //cout<<"final candidate is "<<candidate<<endl;
                 rules[i][k]=candidate;
                 ++k;
                 j+=len;
@@ -295,18 +268,10 @@ int main()
         }
         rules[i][0] = intToString(k-1);
     }
-    /*cout<<"---displaying rules---"<<endl;
-    for(int i=0; i<numberOfRules; ++i)
-    {
-        for(int j=0; j<=stringToInt(rules[i][0]); ++j)
-            cout<<rules[i][j]<<" ";
-        cout<<endl;
-    }*/
     
     // reading lookup table
     int rowsOfLookupTable, columnsOfLookupTable;
     cin>>rowsOfLookupTable>>columnsOfLookupTable;
-    //cout<<"rows and columns of lookup table are -"<<rowsOfLookupTable<<"-"<<columnsOfLookupTable<<"-"<<endl;
     string ** lookupTable = new string*[rowsOfLookupTable];
     for(int i=0; i<rowsOfLookupTable; ++i)
     {
@@ -314,23 +279,17 @@ int main()
         for(int j=0; j<columnsOfLookupTable; ++j)
         {
             cin>>lookupTable[i][j];
-            //cout<<lookupTable[i][j]<<" ";
         }
-        //cout<<endl;
     }
     
     //taking input sequences
     int numberOfInputSequences;
     cin>>numberOfInputSequences;
-    //cout<<"numberOfInputSequences is -"<<numberOfInputSequences<<"-"<<endl;
     getline(cin,dummy);
-    //cout<<"dummy is -"<<dummy<<"-"<<endl;
     for(int i=0; i<numberOfInputSequences; ++i)
     {
-        //cout<<"entered for loop"<<endl;
         //taking as dummy, converting it to continuous anotherDummy and them separating it to indivisual symbols
         getline(cin,dummy);
-        //cout<<"dummy is -"<<dummy<<"-"<<endl;
         string anotherDummy = "";
         for(int j=0; j<dummy.size(); ++j)
         {
@@ -368,9 +327,6 @@ int main()
             j+=len;
         }
         inputSequence[0] = intToString(k-1);
-        /*for(int ij=0; ij<k; ++ij)
-            cout<<inputSequence[ij]<<" ";
-        cout<<endl;*/
         
         //processing input sequence
         Stack stac;
